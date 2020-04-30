@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Robot Network Interface</title>
+    <style>
+        .cell { border-right: 1px solid #000000; border-bottom: 1px solid #000000; float: left; width: 100px; height: 100px; }
+        .row { clear: both; overflow: hidden; }
+        .table { border-left: 1px solid #000000; border-top: 1px solid #000000; }
+    </style>
+  </head>
+  <body>
+    <div class="table">
+        <div class="row">
+            <div id="(0,4)" class="cell"></div>
+            <div id="(1,4)" class="cell"></div>
+            <div id="(2,4)" class="cell"></div>
+            <div id="(3,4)" class="cell"></div>
+            <div id="(4,4)" class="cell"></div>
+        </div>
+        <div class="row">
+            <div id="(0,3)" class="cell"></div>
+            <div id="(1,3)" class="cell"></div>
+            <div id="(2,3)" class="cell"></div>
+            <div id="(3,3)" class="cell"></div>
+            <div id="(4,3)" class="cell"></div>
+        </div>
+        <div class="row">
+            <div id="(0,2)" class="cell"></div>
+            <div id="(1,2)" class="cell"></div>
+            <div id="(2,2)" class="cell"></div>
+            <div id="(3,2)" class="cell"></div>
+            <div id="(4,2)" class="cell"></div>
+        </div>
+        <div class="row">
+            <div id="(0,1)" class="cell"></div>
+            <div id="(1,1)" class="cell"></div>
+            <div id="(2,1)" class="cell"></div>
+            <div id="(3,1)" class="cell"></div>
+            <div id="(4,1)" class="cell"></div>
+        </div>
+        <div class="row">
+            <div id="(0,0)" class="cell"></div>
+            <div id="(1,0)" class="cell"></div>
+            <div id="(2,0)" class="cell"></div>
+            <div id="(3,0)" class="cell"></div>
+            <div id="(4,0)" class="cell"></div>
+        </div>
+    </div>
+    <label for="robot_id_input">Enter Robot Id</label>
+    <input type="text" id="robot_id_input" name="robot_id_input">
+    <input type="number" value="0" id="x_axis" name="x_axis" min="-1" max="1">
+    <input type="number" value="0" id="y_axis" name="y_axis" min="-1" max="1">
+    <input id="move_button" type="button" value="Move" onclick="send_move()">
+    <input id="blink_button" type="button" value="Blink" onclick="send_blink()">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      function send_move()
+      {
+        var x_value = document.getElementById("x_axis").value;
+        var y_value = document.getElementById("y_axis").value;
+        if (!(x_value == 0 && y_value == 0) && !(x_value == -1 && y_value == -1) && !(x_value == 1 && y_value == 1))
+        {
+          socket.emit("move", "" + document.getElementById("robot_id_input").value + " " + x_value + " " + y_value);
+        }
+        else
+        {
+          alert("Invalid move command!");
+        }
+      }
+
+      function send_blink()
+      {
+        socket.emit("blink", document.getElementById("robot_id_input").value);
+      }
+
+      socket.on("status", (data) =>
+      {
+        for (var i = 0; i < 5; i++)
+        {
+          for (var j = 0; j < 5; j++)
+          {
+            document.getElementById("("+i+","+j+")").style["background-color"] = "white";
+          }
+        }
+        for (i = 0; i < data.length; i++)
+        {
+          var id = "(" + data[i][1] + "," + data[i][2] + ")";
+          document.getElementById(id).innerHTML = data[i][0] + ":" + data[i][3];
+          document.getElementById(id).style["background-color"] = "green";
+        }
+      });
+    
+    </script>
+  </body>
+</html>
