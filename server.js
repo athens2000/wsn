@@ -176,7 +176,7 @@ var app = require("express")();
 var http = require("http").createServer(app);
 var webpage_port = 80;
 var webpage_io = require("socket.io")(http);
-var web_page_refresh_interval = 2000;
+var web_page_refresh_interval = 500;
 
 /*
  * Serve index html
