@@ -111,7 +111,7 @@ function package_handler(socket, payload)
     robot_name_to_socket_map[payload[0]] = socket;
   }
   robot_name_to_package_map[payload[0]] = payload[1];
-  console.log("%s package priority is %d", payload[0], package_priority_map[payload[1]]);
+  console.log("%s package priority is %d", payload[0],package_priority_map[payload[1]]);
 };
 
 function position_handler(socket, payload)
